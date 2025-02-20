@@ -1,24 +1,26 @@
 # SQL Injection Testing Guide
 
 ## Introduction
-This guide provides step-by-step instructions on how to set up and perform SQL Injection on a vulnerable PHP-based login page running in a Docker container with a MariaDB database.
+This repository contains a vulnerable website to demonstrate SQL Injection. It runs in a Docker container.
 
 ---
 
 ## Prerequisites
 Before you begin, ensure you have:
 - Docker installed on Windows or Ubuntu.
-- The vulnerable login system running via `docker-compose`.
-
+- Clone or download this repository
 ---
 
 ## Setup Instructions
 ### 1. Start the Docker Containers
 Run the following command inside the project directory:
 ```sh
-cd C:\my-sqli-lab  # Change directory (Windows)
+cd C:\[your own folder]  # Change directory (Windows)
+dir # Check that the folder contains files and folders from this repository (Windows)
 # or
-cd ~/my-sqli-lab  # Change directory (Linux)
+cd ~/[your own folder]  # Change directory (Linux)
+ls # Check that the folder contains files and folders from this repository (Linux)
+
 
 docker-compose up -d  # Start containers
 ```
@@ -31,6 +33,9 @@ http://localhost:8080/login.php
 ```
 You should see a basic login form with **username** and **password** fields.
 
+Two users exist in the database:
+admin - admin123
+user1 - letmein
 ---
 
 ## Performing SQL Injection
@@ -47,25 +52,6 @@ Password: (anything)
 - `#` is a comment in SQL, which ignores the rest of the query.
 Note: Mariadb uses #, other SQL flavors might use --
 
-### 2. Extracting User Data
-#### **Attack Payload:**
-```
-Username: ' UNION SELECT null, username, password FROM users; --
-Password: (anything)
-```
-#### **Explanation:**
-- This UNION query combines the login check with a request for all usernames and passwords from the database.
-
-### 3. Checking for SQL Errors
-Try entering:
-```
-Username: '
-Password: (anything)
-```
-If the server returns an **SQL syntax error**, it confirms the vulnerability.
-
----
-
 ## How to Stop the Containers
 When done testing, stop the containers using:
 ```sh
@@ -74,18 +60,6 @@ docker-compose down
 To remove all stored data (reset the database):
 ```sh
 docker-compose down -v
-```
-
----
-
-## Preventing SQL Injection
-To fix this vulnerability, use **prepared statements** in PHP instead of directly inserting user input into SQL queries.
-
-Example (secure version):
-```php
-$stmt = $conn->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
-$stmt->bind_param("ss", $username, $password);
-$stmt->execute();
 ```
 
 ---

@@ -34,7 +34,9 @@ http://localhost:8080/login.php
 You should see a basic login form with **username** and **password** fields.
 
 Two users exist in the database:
+
 admin - admin123
+
 user1 - letmein
 
 ---

@@ -36,6 +36,7 @@ You should see a basic login form with **username** and **password** fields.
 Two users exist in the database:
 admin - admin123
 user1 - letmein
+
 ---
 
 ## Performing SQL Injection
